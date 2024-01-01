@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="service.UserServiceTest" tests="14" skipped="0" failures="0" errors="0" timestamp="2023-12-28T05:37:24" hostname="WIN-JOG9CSA5Q7C" time="1.64">
+  <properties/>
+  <testcase name="shouldThrowExceptionWhenGettingUserByEmail()" classname="service.UserServiceTest" time="1.557"/>
+  <testcase name="shouldReturnUserByEmail()" classname="service.UserServiceTest" time="0.008"/>
+  <testcase name="shouldThrowExceptionWhenGettingUserById()" classname="service.UserServiceTest" time="0.005"/>
+  <testcase name="shouldSuccessfullyCreateUser()" classname="service.UserServiceTest" time="0.008"/>
+  <testcase name="shouldThrowExceptionWhenEmailIsNotUnique()" classname="service.UserServiceTest" time="0.005"/>
+  <testcase name="shouldThrowExceptionWhenUpdatingUserByUsername()" classname="service.UserServiceTest" time="0.004"/>
+  <testcase name="shouldReturnUserByUserId()" classname="service.UserServiceTest" time="0.003"/>
+  <testcase name="shouldThrowExceptionWhenUpdatingUserById()" classname="service.UserServiceTest" time="0.004"/>
+  <testcase name="shouldReturnUpdatedUserByUserId()" classname="service.UserServiceTest" time="0.003"/>
+  <testcase name="shouldReturnUserByUsername()" classname="service.UserServiceTest" time="0.004"/>
+  <testcase name="shouldReturnUpdatedUserByUsername()" classname="service.UserServiceTest" time="0.006"/>
+  <testcase name="shouldReturnUsersList()" classname="service.UserServiceTest" time="0.003"/>
+  <testcase name="shouldThrowExceptionWhenGettingUserByUsername()" classname="service.UserServiceTest" time="0.005"/>
+  <testcase name="shouldThrowExceptionWhenUsernameIsNotUniqueCreateUser()" classname="service.UserServiceTest" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

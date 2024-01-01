@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ru"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">effectivemoney</a> &gt; <a href="index.source.html" class="el_package">org.example.controller</a> &gt; <span class="el_source">UserController.java</span></div><h1>UserController.java</h1><pre class="source lang-java linenums">package org.example.controller;
+
+import lombok.RequiredArgsConstructor;
+import org.example.entity.User;
+import org.example.entity.UserDto;
+import org.example.service.UserServiceImpl;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
+    //TODO: 001 Rewrite according https://habr.com/ru/articles/675716/
+
+<span class="nc" id="L21">@RequiredArgsConstructor</span>
+@RestController
+@RequestMapping(&quot;/api/user&quot;)
+public class UserController {
+    private final UserServiceImpl userService;
+
+    //TODO: create pagination
+    @GetMapping
+    public ResponseEntity&lt;List&lt;User&gt;&gt; getAllUsers() {
+<span class="nc" id="L30">        return new ResponseEntity&lt;&gt;(userService.getAllUsers(), HttpStatus.OK);</span>
+    }
+
+    @GetMapping(&quot;/id/{userId}&quot;)
+    public ResponseEntity&lt;User&gt; getUserById(@PathVariable Long userId) {
+<span class="nc" id="L35">        return new ResponseEntity&lt;&gt;(userService.getUser(userId), HttpStatus.OK);</span>
+    }
+
+    @GetMapping(&quot;/username/{username}&quot;)
+    public User getUserByUsername(@PathVariable String username) {
+<span class="nc" id="L40">        return userService.getUserByUsername(username);</span>
+    }
+
+    @GetMapping(&quot;/email/{email}&quot;)
+    public User getUserByEmail(@PathVariable String email) {
+<span class="nc" id="L45">        return userService.getUserByEmail(email);</span>
+    }
+
+    @PostMapping
+    public ResponseEntity&lt;User&gt; createUser(@RequestBody User user) {
+<span class="nc" id="L50">        return new ResponseEntity&lt;&gt;(userService.createUser(user), HttpStatus.OK);</span>
+    }
+
+    @PutMapping(&quot;/id/{userId}&quot;)
+    public ResponseEntity&lt;User&gt; updateUserById(@PathVariable Long userId, @RequestBody UserDto userDto) {
+<span class="nc" id="L55">        return new ResponseEntity&lt;&gt;(userService.updateUserById(userId, userDto), HttpStatus.OK);</span>
+    }
+    @PutMapping(&quot;/username/{username}&quot;)
+    public ResponseEntity&lt;User&gt; updateUserByUserName(@PathVariable String username, @RequestBody UserDto userDto) {
+<span class="nc" id="L59">        return new ResponseEntity&lt;&gt;(userService.updateUserByUsername(username, userDto), HttpStatus.OK);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.9.202303310957</span></div></body></html>
