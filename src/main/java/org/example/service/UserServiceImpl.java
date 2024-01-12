@@ -85,4 +85,4 @@ public class UserServiceImpl implements UserService{
     }
 }
 
-//TODO: TODO list viewer
+//TODO: user to edit equal current user

@@ -2,6 +2,7 @@ package service;
 
 import org.example.entity.User;
 import org.example.entity.UserDto;
+import org.example.entity.UserRole;
 import org.example.entity.mapper.UserMapper;
 import org.example.exception.NotFoundEntityException;
 import org.example.exception.NotUniqueEntityException;
@@ -51,8 +52,8 @@ public class UserServiceTest {
     @Test
     public void shouldThrowExceptionWhenUsernameIsNotUniqueCreateUser() {
         // Given
-        User existingUser = new User(1L, "existing_user", "existing.user@example.com", "password");
-        User newUser = new User(2L, "existing_user", "new.user@example.com", "password");
+        User existingUser = new User(1L, "existing_user", "existing.user@example.com", "password", UserRole.ROLE_USER);
+        User newUser = new User(2L, "existing_user", "new.user@example.com", "password", UserRole.ROLE_USER);
 
         Mockito.when(userRepository.existsByUsernameIgnoreCase(existingUser.getUsername())).thenReturn(true);
 
@@ -63,8 +64,8 @@ public class UserServiceTest {
 
     @Test
     public void shouldThrowExceptionWhenEmailIsNotUnique() {
-        User existingUser = new User(1L, "existing_user", "existing.user@example.com", "password");
-        User newUser = new User(2L, "existing_user2", "existing.user@example.com", "password");
+        User existingUser = new User(1L, "existing_user", "existing.user@example.com", "password", UserRole.ROLE_USER);
+        User newUser = new User(2L, "existing_user2", "existing.user@example.com", "password", UserRole.ROLE_USER);
 
         Mockito.when(userRepository.existsByEmailIgnoreCase(existingUser.getEmail())).thenReturn(true);
 
@@ -75,8 +76,8 @@ public class UserServiceTest {
 
     @Test
     public void shouldReturnUsersList() {
-        User user1 = new User(1L, "john_doe", "john.doe@example.com", "password");
-        User user2 = new User(2L, "peter_doe", "peterdoe@example.com", "password");
+        User user1 = new User(1L, "john_doe", "john.doe@example.com", "password", UserRole.ROLE_USER);
+        User user2 = new User(2L, "peter_doe", "peterdoe@example.com", "password", UserRole.ROLE_USER);
         List<User> expectedUserList = List.of(user1, user2);
 
         Mockito.when(userRepository.findAll()).thenReturn(expectedUserList);
@@ -89,7 +90,7 @@ public class UserServiceTest {
     @Test
     public void shouldReturnUserByUserId() {
         Long userId = 1L;
-        User expectedUser = new User(userId, "john_doe", "john.doe@example.com", "password");
+        User expectedUser = new User(userId, "john_doe", "john.doe@example.com", "password", UserRole.ROLE_USER);
 
         Mockito.when(userRepository.findById(userId)).thenReturn(Optional.of(expectedUser));
 
@@ -113,7 +114,7 @@ public class UserServiceTest {
     @Test
     public void shouldReturnUserByUsername() {
         String username = "john_doe";
-        User expectedUser = new User(1L, username, "john.doe@example.com", "password");
+        User expectedUser = new User(1L, username, "john.doe@example.com", "password", UserRole.ROLE_USER);
 
         Mockito.when(userRepository.findByUsernameIgnoreCase(username)).thenReturn(Optional.of(expectedUser));
 
@@ -137,7 +138,7 @@ public class UserServiceTest {
     @Test
     public void shouldReturnUserByEmail() {
         String email = "john.doe@example.com";
-        User expectedUser = new User(1L, "john_doe", email, "password");
+        User expectedUser = new User(1L, "john_doe", email, "password", UserRole.ROLE_USER);
 
         Mockito.when(userRepository.findByEmailIgnoreCase(email)).thenReturn(Optional.of(expectedUser));
 
@@ -163,9 +164,9 @@ public class UserServiceTest {
         // Given
         Long userId = 1L;
         UserDto updatedUserDto = new UserDto("updated_username", "updated.email@example.com", "updatedPassword");
-        User existingUser = new User(userId, "john_doe", "john.doe@example.com", "password");
+        User existingUser = new User(userId, "john_doe", "john.doe@example.com", "password", UserRole.ROLE_USER);
 
-        User updatedUser = new User(1L, "updated_username", "updated.email@example.com", "updatedPassword");
+        User updatedUser = new User(1L, "updated_username", "updated.email@example.com", "updatedPassword", UserRole.ROLE_USER);
 
         Mockito.when(userRepository.findById(userId)).thenReturn(Optional.of(existingUser));
         Mockito.when(userRepository.save(Mockito.any(User.class))).thenReturn(updatedUser);
@@ -191,9 +192,9 @@ public class UserServiceTest {
         // Given
         String username = "john_doe";
         UserDto updatedUserDto = new UserDto("updated_username", "updated.email@example.com", "updatedPassword");
-        User existingUser = new User(1L, username, "john.doe@example.com", "password");
+        User existingUser = new User(1L, username, "john.doe@example.com", "password", UserRole.ROLE_USER);
 
-        User updatedUser = new User(1L, "updated_username", "updated.email@example.com", "updatedPassword");
+        User updatedUser = new User(1L, "updated_username", "updated.email@example.com", "updatedPassword", UserRole.ROLE_USER);
 
         Mockito.when(userRepository.findByUsernameIgnoreCase(username)).thenReturn(Optional.of(existingUser));
         Mockito.when(userRepository.save(Mockito.any(User.class))).thenReturn(updatedUser);
