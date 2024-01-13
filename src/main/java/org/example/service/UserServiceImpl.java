@@ -7,6 +7,9 @@ import org.example.entity.mapper.UserMapper;
 import org.example.exception.NotFoundEntityException;
 import org.example.exception.NotUniqueEntityException;
 import org.example.repository.UserRepository;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -15,7 +18,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService, UserDetailsService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
@@ -82,6 +85,11 @@ public class UserServiceImpl implements UserService{
         } else {
             throw new NotFoundEntityException(String.format("User not found, username: %s", username));
         }
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return getUserByUsername(username);
     }
 }
 
