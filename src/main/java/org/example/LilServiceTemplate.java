@@ -4,8 +4,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class EffectiveMoneyApplication {
+public class LilServiceTemplate {
     public static void main(String[] args) {
-        SpringApplication.run(EffectiveMoneyApplication.class, args);
+        SpringApplication.run(LilServiceTemplate.class, args);
     }
 }

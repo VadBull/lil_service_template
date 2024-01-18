@@ -42,6 +42,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     @Transactional
+    public void deleteById(Long id){
+        userRepository.deleteById(id);
+    };
+
+    @Override
+    @Transactional
     public User getUser(Long userId) {
         return userRepository.findById(userId).orElseThrow(
                 () -> new NotFoundEntityException(String.format("User %d does not exists. User can't be found", userId)));

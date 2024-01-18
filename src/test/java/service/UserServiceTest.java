@@ -8,7 +8,6 @@ import org.example.exception.NotFoundEntityException;
 import org.example.exception.NotUniqueEntityException;
 import org.example.repository.UserRepository;
 import org.example.service.UserServiceImpl;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -17,10 +16,15 @@ import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
@@ -41,12 +45,37 @@ public class UserServiceTest {
                 .password("password")
                 .build();
 
-        Mockito.when(userRepository.save(Mockito.any(User.class))).thenReturn(userToCreate);
+        when(userRepository.save(Mockito.any(User.class))).thenReturn(userToCreate);
 
         User createduser = userService.createUser(userToCreate);
 
-        Assertions.assertEquals(createduser, userToCreate);
-        Mockito.verify(userRepository, Mockito.times(1)).save(Mockito.any(User.class));
+        assertEquals(createduser, userToCreate);
+        verify(userRepository, times(1)).save(Mockito.any(User.class));
+    }
+
+    @Test
+    public void shouldReturnAllUsers() {
+        List<User> mockUsers = Arrays.asList(
+                new User(1L, "user1", "user1@example.com", "password1", UserRole.ROLE_USER),
+                new User(2L, "user2", "user2@example.com", "password2", UserRole.ROLE_ADMIN)
+        );
+
+        when(userRepository.findAll()).thenReturn(mockUsers);
+
+        List<User> result = userService.getAllUsers();
+
+        assertEquals(mockUsers.size(), result.size());
+        assertEquals(mockUsers.get(0), result.get(0));
+        assertEquals(mockUsers.get(1), result.get(1));
+    }
+
+    @Test
+    public void shouldDeleteUser() {
+        Long userIdToDelete = 1L;
+
+        userService.deleteById(userIdToDelete);
+
+        verify(userRepository, times(1)).deleteById(userIdToDelete);
     }
 
     @Test
@@ -55,11 +84,11 @@ public class UserServiceTest {
         User existingUser = new User(1L, "existing_user", "existing.user@example.com", "password", UserRole.ROLE_USER);
         User newUser = new User(2L, "existing_user", "new.user@example.com", "password", UserRole.ROLE_USER);
 
-        Mockito.when(userRepository.existsByUsernameIgnoreCase(existingUser.getUsername())).thenReturn(true);
+        when(userRepository.existsByUsernameIgnoreCase(existingUser.getUsername())).thenReturn(true);
 
         assertThrows(NotUniqueEntityException.class, () -> userService.createUser(newUser),
                 "Exception should be thrown when username is not unique.");
-        Mockito.verify(userRepository, Mockito.times(1)).existsByUsernameIgnoreCase(newUser.getUsername());
+        verify(userRepository, times(1)).existsByUsernameIgnoreCase(newUser.getUsername());
     }
 
     @Test
@@ -67,11 +96,11 @@ public class UserServiceTest {
         User existingUser = new User(1L, "existing_user", "existing.user@example.com", "password", UserRole.ROLE_USER);
         User newUser = new User(2L, "existing_user2", "existing.user@example.com", "password", UserRole.ROLE_USER);
 
-        Mockito.when(userRepository.existsByEmailIgnoreCase(existingUser.getEmail())).thenReturn(true);
+        when(userRepository.existsByEmailIgnoreCase(existingUser.getEmail())).thenReturn(true);
 
         assertThrows(NotUniqueEntityException.class, () -> userService.createUser(newUser),
                 "Exception should be thrown when email is not unique.");
-        Mockito.verify(userRepository, Mockito.times(1)).existsByEmailIgnoreCase(newUser.getEmail());
+        verify(userRepository, times(1)).existsByEmailIgnoreCase(newUser.getEmail());
     }
 
     @Test
@@ -80,11 +109,11 @@ public class UserServiceTest {
         User user2 = new User(2L, "peter_doe", "peterdoe@example.com", "password", UserRole.ROLE_USER);
         List<User> expectedUserList = List.of(user1, user2);
 
-        Mockito.when(userRepository.findAll()).thenReturn(expectedUserList);
+        when(userRepository.findAll()).thenReturn(expectedUserList);
 
         List<User> returnedUserList = userService.getAllUsers();
 
-        Assertions.assertEquals(expectedUserList, returnedUserList);
+        assertEquals(expectedUserList, returnedUserList);
     }
 
     @Test
@@ -92,23 +121,23 @@ public class UserServiceTest {
         Long userId = 1L;
         User expectedUser = new User(userId, "john_doe", "john.doe@example.com", "password", UserRole.ROLE_USER);
 
-        Mockito.when(userRepository.findById(userId)).thenReturn(Optional.of(expectedUser));
+        when(userRepository.findById(userId)).thenReturn(Optional.of(expectedUser));
 
         User returnedUser = userService.getUser(userId);
 
-        Assertions.assertEquals(expectedUser, returnedUser);
+        assertEquals(expectedUser, returnedUser);
     }
 
     @Test
     public void shouldThrowExceptionWhenGettingUserById() {
         Long userId = 999L;
 
-        Mockito.when(userRepository.findById(userId)).thenReturn(Optional.empty());
+        when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
         assertThrows(NotFoundEntityException.class, () -> userService.getUser(userId),
                 "Exception should be thrown when user with specified id is not found.");
 
-        Mockito.verify(userRepository, Mockito.times(1)).findById(userId);
+        verify(userRepository, times(1)).findById(userId);
     }
 
     @Test
@@ -116,23 +145,23 @@ public class UserServiceTest {
         String username = "john_doe";
         User expectedUser = new User(1L, username, "john.doe@example.com", "password", UserRole.ROLE_USER);
 
-        Mockito.when(userRepository.findByUsernameIgnoreCase(username)).thenReturn(Optional.of(expectedUser));
+        when(userRepository.findByUsernameIgnoreCase(username)).thenReturn(Optional.of(expectedUser));
 
         User returnedUser = userService.getUserByUsername(username);
 
-        Assertions.assertEquals(expectedUser, returnedUser);
+        assertEquals(expectedUser, returnedUser);
     }
 
     @Test
     public void shouldThrowExceptionWhenGettingUserByUsername() {
         String username = "john_doe";
 
-        Mockito.when(userRepository.findByUsernameIgnoreCase(username)).thenReturn(Optional.empty());
+        when(userRepository.findByUsernameIgnoreCase(username)).thenReturn(Optional.empty());
 
         assertThrows(NotFoundEntityException.class, () -> userService.getUserByUsername(username),
                 "Exception should be thrown when user with specified username is not found.");
 
-        Mockito.verify(userRepository, Mockito.times(1)).findByUsernameIgnoreCase(username);
+        verify(userRepository, times(1)).findByUsernameIgnoreCase(username);
     }
 
     @Test
@@ -140,23 +169,23 @@ public class UserServiceTest {
         String email = "john.doe@example.com";
         User expectedUser = new User(1L, "john_doe", email, "password", UserRole.ROLE_USER);
 
-        Mockito.when(userRepository.findByEmailIgnoreCase(email)).thenReturn(Optional.of(expectedUser));
+        when(userRepository.findByEmailIgnoreCase(email)).thenReturn(Optional.of(expectedUser));
 
         User returnedUser = userService.getUserByEmail(email);
 
-        Assertions.assertEquals(expectedUser, returnedUser);
+        assertEquals(expectedUser, returnedUser);
     }
 
     @Test
     public void shouldThrowExceptionWhenGettingUserByEmail() {
         String userEmail = "john_doe";
 
-        Mockito.when(userRepository.findByEmailIgnoreCase(userEmail)).thenReturn(Optional.empty());
+        when(userRepository.findByEmailIgnoreCase(userEmail)).thenReturn(Optional.empty());
 
         assertThrows(NotFoundEntityException.class, () -> userService.getUserByEmail(userEmail),
                 "Exception should be thrown when user with specified username is not found.");
 
-        Mockito.verify(userRepository, Mockito.times(1)).findByEmailIgnoreCase(userEmail);
+        verify(userRepository, times(1)).findByEmailIgnoreCase(userEmail);
     }
 
     @Test
@@ -168,12 +197,12 @@ public class UserServiceTest {
 
         User updatedUser = new User(1L, "updated_username", "updated.email@example.com", "updatedPassword", UserRole.ROLE_USER);
 
-        Mockito.when(userRepository.findById(userId)).thenReturn(Optional.of(existingUser));
-        Mockito.when(userRepository.save(Mockito.any(User.class))).thenReturn(updatedUser);
+        when(userRepository.findById(userId)).thenReturn(Optional.of(existingUser));
+        when(userRepository.save(Mockito.any(User.class))).thenReturn(updatedUser);
 
         User returnedUser = userService.updateUserById(userId, updatedUserDto);
 
-        Assertions.assertEquals(updatedUser, returnedUser);
+        assertEquals(updatedUser, returnedUser);
     }
 
     @Test
@@ -181,7 +210,7 @@ public class UserServiceTest {
         Long userId = 1L;
         UserDto updatedUserDto = new UserDto("updated_username", "updated.email@example.com", "updatedPassword");
 
-        Mockito.when(userRepository.findById(userId)).thenReturn(Optional.empty());
+        when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
         assertThrows(NotFoundEntityException.class, () -> userService.updateUserById(userId, updatedUserDto),
                 "Exception should be thrown when updating a user with specified ID that does not exist.");
@@ -196,12 +225,12 @@ public class UserServiceTest {
 
         User updatedUser = new User(1L, "updated_username", "updated.email@example.com", "updatedPassword", UserRole.ROLE_USER);
 
-        Mockito.when(userRepository.findByUsernameIgnoreCase(username)).thenReturn(Optional.of(existingUser));
-        Mockito.when(userRepository.save(Mockito.any(User.class))).thenReturn(updatedUser);
+        when(userRepository.findByUsernameIgnoreCase(username)).thenReturn(Optional.of(existingUser));
+        when(userRepository.save(Mockito.any(User.class))).thenReturn(updatedUser);
 
         User returnedUser = userService.updateUserByUsername(username, updatedUserDto);
 
-        Assertions.assertEquals(updatedUser, returnedUser);
+        assertEquals(updatedUser, returnedUser);
     }
 
     @Test
@@ -209,7 +238,7 @@ public class UserServiceTest {
         String userName = "john_doe";
         UserDto updatedUserDto = new UserDto("updated_username", "updated.email@example.com", "updatedPassword");
 
-        Mockito.when(userRepository.findByUsernameIgnoreCase(userName)).thenReturn(Optional.empty());
+        when(userRepository.findByUsernameIgnoreCase(userName)).thenReturn(Optional.empty());
 
         assertThrows(NotFoundEntityException.class, () -> userService.updateUserByUsername(userName, updatedUserDto),
                 "Exception should be thrown when updating a user with specified Username that does not exist.");

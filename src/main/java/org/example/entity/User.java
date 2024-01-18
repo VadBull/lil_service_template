@@ -3,7 +3,9 @@ package org.example.entity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,7 +27,8 @@ import java.util.Set;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
 @Builder
 @Entity
 @Table(name = "user")
@@ -39,9 +42,8 @@ public class User implements UserDetails {
     private String email;
     @Column
     private String password;
-
-    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
-//    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.STRING)
+    @Column(name= "user_role", nullable = false)
     private UserRole userRole;
 
     @Override
