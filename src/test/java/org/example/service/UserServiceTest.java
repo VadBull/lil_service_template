@@ -1,4 +1,4 @@
-package service;
+package org.example.service;
 
 import org.example.entity.User;
 import org.example.entity.UserDto;
@@ -7,7 +7,6 @@ import org.example.entity.mapper.UserMapper;
 import org.example.exception.NotFoundEntityException;
 import org.example.exception.NotUniqueEntityException;
 import org.example.repository.UserRepository;
-import org.example.service.UserServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -47,9 +46,9 @@ public class UserServiceTest {
 
         when(userRepository.save(Mockito.any(User.class))).thenReturn(userToCreate);
 
-        User createduser = userService.createUser(userToCreate);
+        User createdUser = userService.createUser(userToCreate);
 
-        assertEquals(createduser, userToCreate);
+        assertEquals(createdUser, userToCreate);
         verify(userRepository, times(1)).save(Mockito.any(User.class));
     }
 

@@ -26,8 +26,6 @@ import java.util.List;
 public class UserController {
     private final UserServiceImpl userService;
 
-    //TODO: create pagination
-
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/all")
     public ResponseEntity<List<User>> getAllUsers() {

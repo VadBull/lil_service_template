@@ -9,8 +9,11 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 @Configuration
 @EnableWebSecurity
@@ -25,13 +28,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/api/user/**").hasAnyRole("ADMIN", "USER")
+                .antMatchers("/api/user/**").permitAll()
                 .antMatchers("/", "/home").permitAll() // Specify public access URLs
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
 //                .loginPage("/login")
                 .permitAll()
-                .defaultSuccessUrl("/api/main") // Change to your webservice entrypoint
+//                .defaultSuccessUrl("/api/user/all") // Change to your webservice entrypoint
                 .and()
                 .logout()
                 .permitAll();
