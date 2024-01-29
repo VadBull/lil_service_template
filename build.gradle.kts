@@ -1,5 +1,3 @@
-
-
 plugins {
     id("java")
     id("org.springframework.boot") version "2.7.6"
@@ -50,14 +48,14 @@ dependencies {
     implementation("org.flywaydb:flyway-core:8.5.13")
     implementation("org.flywaydb:flyway-mysql:8.5.13")
     implementation("org.mapstruct:mapstruct:1.4.2.Final")
-    testImplementation("junit:junit:4.13.1")
-    annotationProcessor ("org.mapstruct:mapstruct-processor:1.4.2.Final")
     implementation("javax.validation:validation-api:1.1.0.Final")
-    compileOnly("org.projectlombok:lombok:1.18.28")
     implementation("com.mysql:mysql-connector-j:8.0.33")
+    compileOnly("org.projectlombok:lombok:1.18.26")
     annotationProcessor("org.projectlombok:lombok")
+    annotationProcessor("org.mapstruct:mapstruct-processor:1.4.2.Final")
+    testImplementation("junit:junit:4.13.1")
     testImplementation("org.springframework.boot:spring-boot-starter-test:2.6.4")
-    testImplementation ("org.projectlombok:lombok")
+    testImplementation("org.projectlombok:lombok")
     testImplementation("com.github.tomakehurst:wiremock:2.27.2")
     testImplementation("org.springframework.security:spring-security-test:5.7.5")
 }
@@ -66,5 +64,5 @@ dependencies {
 
 tasks.withType<Test> {
     useJUnitPlatform()
-    finalizedBy (tasks.jacocoTestReport)
+    finalizedBy(tasks.jacocoTestReport)
 }

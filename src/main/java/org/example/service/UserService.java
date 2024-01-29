@@ -6,7 +6,7 @@ import org.example.entity.UserDto;
 import java.util.List;
 
 public interface UserService {
-    public User createUser(User user);
+    public User createUser(UserDto user);
     public List<User> getAllUsers();
     public void deleteById(Long id);
     public User getUser(Long userId);

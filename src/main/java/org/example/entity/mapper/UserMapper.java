@@ -11,5 +11,5 @@ import org.mapstruct.factory.Mappers;
 public interface UserMapper {
     UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
-    void updateEntity (UserDto userDto, @MappingTarget User user);
+    void updateEntity(UserDto userDto, @MappingTarget User user);
 }

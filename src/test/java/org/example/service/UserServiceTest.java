@@ -14,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Arrays;
 import java.util.List;
@@ -38,17 +39,25 @@ public class UserServiceTest {
 
     @Test
     public void shouldSuccessfullyCreateUser() {
-        User userToCreate = User.builder()
+        UserDto userToCreate = UserDto.builder()
                 .username("john_doe")
                 .email("john.doe@example.com")
                 .password("password")
                 .build();
 
-        when(userRepository.save(Mockito.any(User.class))).thenReturn(userToCreate);
+
+        User expectedUser = User.builder()
+                .id(1L)
+                .username("john_doe")
+                .email("john.doe@example.com")
+                .password("password")
+                .userRole(UserRole.ROLE_USER)
+                .build();
+        when(userRepository.save(Mockito.any(User.class))).thenReturn(expectedUser);
 
         User createdUser = userService.createUser(userToCreate);
 
-        assertEquals(createdUser, userToCreate);
+        assertEquals(expectedUser, createdUser);
         verify(userRepository, times(1)).save(Mockito.any(User.class));
     }
 
@@ -79,9 +88,8 @@ public class UserServiceTest {
 
     @Test
     public void shouldThrowExceptionWhenUsernameIsNotUniqueCreateUser() {
-        // Given
         User existingUser = new User(1L, "existing_user", "existing.user@example.com", "password", UserRole.ROLE_USER);
-        User newUser = new User(2L, "existing_user", "new.user@example.com", "password", UserRole.ROLE_USER);
+        UserDto newUser = new UserDto("existing_user", "new.user@example.com", "password");
 
         when(userRepository.existsByUsernameIgnoreCase(existingUser.getUsername())).thenReturn(true);
 
@@ -93,7 +101,7 @@ public class UserServiceTest {
     @Test
     public void shouldThrowExceptionWhenEmailIsNotUnique() {
         User existingUser = new User(1L, "existing_user", "existing.user@example.com", "password", UserRole.ROLE_USER);
-        User newUser = new User(2L, "existing_user2", "existing.user@example.com", "password", UserRole.ROLE_USER);
+        UserDto newUser = new UserDto("existing_user2", "existing.user@example.com", "password");
 
         when(userRepository.existsByEmailIgnoreCase(existingUser.getEmail())).thenReturn(true);
 
@@ -241,5 +249,18 @@ public class UserServiceTest {
 
         assertThrows(NotFoundEntityException.class, () -> userService.updateUserByUsername(userName, updatedUserDto),
                 "Exception should be thrown when updating a user with specified Username that does not exist.");
+    }
+
+    @Test
+    public void shouldReturnUserLoadByUsername() {
+        String username = "john_doe";
+        User expectedUser = new User(1L, username, "john.doe@example.com", "password", UserRole.ROLE_USER);
+
+
+        when(userRepository.findByUsernameIgnoreCase(username)).thenReturn(Optional.of(expectedUser));
+
+        UserDetails returnedUser = userService.loadUserByUsername(username);
+
+        assertEquals(expectedUser, returnedUser);
     }
 }

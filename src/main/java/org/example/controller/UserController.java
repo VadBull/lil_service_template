@@ -18,8 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-    //TODO: 001 Rewrite according https://habr.com/ru/articles/675716/
-
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/user")
@@ -54,7 +52,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
+    public ResponseEntity<User> createUser(@RequestBody UserDto user) {
         return new ResponseEntity<>(userService.createUser(user), HttpStatus.OK);
     }
 

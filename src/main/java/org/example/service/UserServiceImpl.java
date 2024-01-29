@@ -3,6 +3,7 @@ package org.example.service;
 import lombok.RequiredArgsConstructor;
 import org.example.entity.User;
 import org.example.entity.UserDto;
+import org.example.entity.UserRole;
 import org.example.entity.mapper.UserMapper;
 import org.example.exception.NotFoundEntityException;
 import org.example.exception.NotUniqueEntityException;
@@ -24,14 +25,17 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     @Transactional
-    public User createUser(User user) {
+    public User createUser(UserDto user) {
         if (userRepository.existsByUsernameIgnoreCase(user.getUsername())) {
             throw new NotUniqueEntityException("Login is already exists");
         }
         if (userRepository.existsByEmailIgnoreCase(user.getEmail())) {
             throw new NotUniqueEntityException("Email is already exists");
         }
-        return userRepository.save(user);
+        User createUser = new User();
+        userMapper.updateEntity(user, createUser);
+        createUser.setUserRole(UserRole.ROLE_USER);
+        return userRepository.save(createUser);
     }
 
     @Override
@@ -74,7 +78,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         if (userToUpdateCandidate.isPresent()) {
             User user = userToUpdateCandidate.get();
             userMapper.updateEntity(userDto, user);
-            return createUser(user);
+            return userRepository.save(user);
         } else {
             throw new NotFoundEntityException(String.format("Not found user, id: %d", id));
         }
@@ -99,4 +103,4 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 }
 
-//TODO: user to edit equal current user
+//TODO: user to edit equal current user   z
