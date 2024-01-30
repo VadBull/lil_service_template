@@ -50,6 +50,7 @@ dependencies {
     implementation("org.mapstruct:mapstruct:1.4.2.Final")
     implementation("javax.validation:validation-api:1.1.0.Final")
     implementation("com.mysql:mysql-connector-j:8.0.33")
+    implementation("javax.validation:validation-api:2.0.1.Final")
     compileOnly("org.projectlombok:lombok:1.18.26")
     annotationProcessor("org.projectlombok:lombok")
     annotationProcessor("org.mapstruct:mapstruct-processor:1.4.2.Final")
